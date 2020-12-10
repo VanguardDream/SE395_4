@@ -48,8 +48,11 @@ if __name__ == "__main__":
     # print(spatial.distance.cosine(w2v["happy"], w2v["sad"]))
 
     # Creating Embedding Matrix
-    embedding_matrix_train = np.zeros((X_train_vec.shape[0], 10, 50))
-    embedding_matrix_test = np.zeros((X_test_vec.shape[0], 10, 50))
+    # embedding_matrix_train = np.zeros((X_train_vec.shape[0], 10, 50))
+    # embedding_matrix_test = np.zeros((X_test_vec.shape[0], 10, 50))
+    embedding_matrix_train = np.zeros((X_train_vec.shape[0], 10, w2v["i"].shape[0]))
+    embedding_matrix_test = np.zeros((X_test_vec.shape[0], 10, w2v["i"].shape[0]))
+
 
     for ix in range(X_train_vec.shape[0]):
         for ij in range(len(X_train_vec[ix])):
@@ -67,10 +70,10 @@ if __name__ == "__main__":
     # # A simple RNN network 
 
     # model = Sequential()
-    # model.add(SimpleRNN(64, input_shape=(10,50), return_sequences=True))
-    # model.add(Dropout(0.5))
+    # model.add(SimpleRNN(64, input_shape=(10,w2v["i"].shape[0]), return_sequences=True))
+    # # model.add(Dropout(0.5))
     # model.add(SimpleRNN(64, return_sequences=False))
-    # model.add(Dropout(0.5))
+    # # model.add(Dropout(0.5))
     # model.add(Dense(5))
     # model.add(Activation('softmax'))
 
@@ -80,7 +83,7 @@ if __name__ == "__main__":
     # A LSTM network
 
     model = Sequential()
-    model.add(LSTM(64,input_shape=(10,50), return_sequences=True))
+    model.add(LSTM(64,input_shape=(10,w2v["i"].shape[0]), return_sequences=True))
     model.add(Dropout(0.5))
     model.add(LSTM(64, return_sequences=False))
     model.add(Dropout(0.5))
@@ -90,7 +93,7 @@ if __name__ == "__main__":
     # Check model structure
     model.summary()
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
 
     hist = model.fit(embedding_matrix_train,Y_train,
                 epochs = 50, batch_size=32,shuffle=True
@@ -118,3 +121,22 @@ if __name__ == "__main__":
     #         print (emoji.emojize(emoji_dict[Y_test[ix]], use_aliases=True))
 
 #--------------- Model Accuracy ---------------
+
+    fig, loss_ax = plt.subplots()
+
+    # acc_ax = loss_ax.twinx()
+
+    loss_ax.plot(hist.history['loss'], 'y', label='train loss')
+    # loss_ax.plot(hist.history['val_loss'], 'b', label='validation loss')
+    loss_ax.set_xlabel('epoch')
+    loss_ax.set_ylabel('loss')
+
+    
+    # acc_ax.set_ylabel('accuracy')
+    # acc_ax.plot(hist.history['val_accuracy'], 'r', label ='Validation Accuracy')
+
+    loss_ax.legend(loc='upper left')
+    # acc_ax.legend(loc='lower left')
+
+    plt.show()
+#--------------- Plot graph ---------------
