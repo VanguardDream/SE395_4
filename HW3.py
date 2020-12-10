@@ -3,7 +3,7 @@ import numpy as np
 from scipy import spatial
 
 from keras.models import Sequential
-from keras.layers import Dense, Input, Dropout, SimpleRNN,LSTM, Activation
+from keras.layers import Dense, Input, Dropout, SimpleRNN,LSTM, Activation, Embedding
 from keras.utils import np_utils
 
 import matplotlib.pyplot as plt
@@ -64,18 +64,31 @@ if __name__ == "__main__":
 
 #--------------- Data preprocessing ---------------
 
-    # A simple RNN network to classify the emoji class from an input Sentence
+    # # A simple RNN network 
+
+    # model = Sequential()
+    # model.add(SimpleRNN(64, input_shape=(10,50), return_sequences=True))
+    # model.add(Dropout(0.5))
+    # model.add(SimpleRNN(64, return_sequences=False))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(5))
+    # model.add(Activation('softmax'))
+
+    # # Check model structure
+    # model.summary()
+
+    # A LSTM network
 
     model = Sequential()
-    model.add(SimpleRNN(64, input_shape=(10,50), return_sequences=True))
+    model.add(LSTM(64,input_shape=(10,50), return_sequences=True))
     model.add(Dropout(0.5))
-    model.add(SimpleRNN(64, return_sequences=False))
+    model.add(LSTM(64, return_sequences=False))
     model.add(Dropout(0.5))
     model.add(Dense(5))
     model.add(Activation('softmax'))
 
-    # # Check model structure
-    # model.summary()
+    # Check model structure
+    model.summary()
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -104,4 +117,4 @@ if __name__ == "__main__":
     #         print (emoji.emojize(emoji_dict[pred[ix]], use_aliases=True),end=" ")
     #         print (emoji.emojize(emoji_dict[Y_test[ix]], use_aliases=True))
 
-    
+#--------------- Model Accuracy ---------------
